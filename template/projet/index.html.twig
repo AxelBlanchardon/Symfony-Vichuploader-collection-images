@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+     {% block stylesheets %}
+          <link rel="stylesheet" href="{{ asset('assets/css/general.css') }}"/> 
+    {% endblock %}
+
+{% block body %}
+
+{% include "inc/menu.html.twig" %}
+
+<div class="colonne-centrale float-left">
+    <div class="colonne-centrale-padding">
+        <h1 class="float-left">- Gestion des projets -</h1>
+        <div class="float-right">
+            <a href="/admin/projet/gestion/new">
+            <img class="float-left java_edit" action="editeur" ref="0" src="{{ asset('assets/images/icone-ajout.jpg') }}" alt="ajout-projet" /></a>
+            <p class="float-left ajout"><a class="java_edit" action="editeur" href="/admin/projet/gestion/new">Ajouter un nouveau projet</p>
+        </div>
+
+        <div class="reset"></div>
+
+        <div class="grand-trait"></div>
+        
+        {% for projet in projets %}
+
+        <div class="float-right">
+            <div class="reset"></div>
+        </div>
+        <div class="cadre" id="cadre1">
+            <div class="cadre-padding">
+                <div class="nom float-left">
+                    <a class="java_edit bleu-clair tooltip" title="Editer le compte" action="editeur"  href="{{ path('projet_edit', {'id': projet.id}) }}">{{ projet.titre }}</a>
+                </div>
+
+                <div class="float-right">
+
+                    {% if projet.actif == null %}
+
+                        <div id="actif1" class="off float-left tooltip"></div>
+
+                    {% else %}
+
+                        <div id="actif1" class="on float-left tooltip"></div>
+
+                    {% endif %}
+                    
+                    <a class="java_edit" module="users" action="editeur" href="{{ path('projet_edit', {'id': projet.id}) }}"><img title="Editer" class="editer java_edit tooltip" src="{{ asset('assets/images/edit.png') }}" alt="editer" width="18px" /></a>
+                    <div class="float-right">
+                        <form method="post" action="{{ path('projet_delete', {'id': projet.id}) }}" onsubmit="return confirm('Etes vous sur de vouloir supprimer ce projet ?');">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ projet.id) }}">
+                            <input type="image" name="supprimer" src="{{ asset('assets/images/supprimer.png') }}" alt="supprimer" width="19px">
+                        </form>
+                    </div>
+                </div>
+        <div class="reset"></div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

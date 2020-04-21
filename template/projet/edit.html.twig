@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editer le projet{% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+
+{% include "inc/menu.html.twig" %}
+    <div class="colonne-centrale float-left">
+        <div class="colonne-centrale-padding">
+            <div class="float-right">
+                <a href="{{ path('projet_index') }}"><span class="back pointer"> Retour</span></a>
+            </div>
+    <h1 class="float-left">- Modification du projet : {{projet.titre}}</h1>
+    <div class="reset"></div>
+
+    <div class="grand-trait"></div>
+
+    <div class="bleu cadre">
+        <div class="cadre-padding">
+
+            {{ include('projet/_form.html.twig', {'button_label': 'Enregistrer les modifications'}) }}
+
+            <p class="center">
+            <img class="center" action="editeur" src="{{ asset('uploads/') }}{{projet.image}}" alt="image partenaire" style ="width: 350px; height: auto" />
+            </p>
+
+        </div>
+    </div>
+
+{{ include('projet/_delete_form.html.twig') }}
+
+{% endblock %}
+
+{% block _projet_imageSlider_widget %}
+<br>
+<p>Ajouter des images pour le slider du projet : </p>
+<br>
+
+{{ form_widget(form) }}
+
+<div class='form-group'>
+    <button type='button' id='add-image'>Ajouter une image</button>
+</div>
+
+{% endblock %}
+
+{% block _projet_imageSlider_entry_widget %}
+
+<div class='form-group' id='block_{{id}}'>
+
+    {{ form_widget(form) }}
+
+    <button type="button" data-action="delete" data-target="#block_{{id}}" alt="supprimer" width="15px">
+    <img src="{{ asset('assets/images/supprimer.png') }}"</button>
+
+</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+    <script src="{{ asset('assets/javascript/jquery.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/javascript/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
+    <script>
+    $('#add-image').click(function(){
+
+        // recupere le nombre des futurs champs qui vont etre créés
+        const index = $('#projet_imageSlider div.form-group').length;
+
+        // recupere le prototype des entrées
+        const tmpl = $('#projet_imageSlider').data('prototype').replace(/__name__/g, index);
+
+
+        //injecte ce code au sein de la div
+        $('#projet_imageSlider').append(tmpl);
+        handleDeleteButtons();
+
+        });
+
+        function handleDeleteButtons(){
+            $('button[data-action="delete"]').click(function(){
+                const target = this.dataset.target
+
+                $(target).remove();
+            });
+        }
+        handleDeleteButtons();
+    </script>
+
+{% endblock %}
